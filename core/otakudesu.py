@@ -2,10 +2,13 @@ import requests
 from bs4 import BeautifulSoup
 import re
 from rich.console import Console
+from database import get_settings
 
+
+setting = get_settings()
 console = Console()
 
-HOST = "https://otakudesu.best/"
+HOST = setting.get("host_url")
 HEADERS = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
 
 def get_page_soup(url):
@@ -72,6 +75,7 @@ def get_download_links(url):
 			ret[filetype] = fileurl
 
 	return ret
+
 def get_all_ongoing_anime(page=1):
     """Mengambil daftar anime ongoing dari halaman tertentu."""
     url = f"{HOST}/ongoing-anime/page/{page}/"
@@ -89,6 +93,7 @@ def get_all_ongoing_anime(page=1):
         eps_tag = anime.find('div', {"class": "epz"})
         hari_tag = anime.find('div', {"class": "epztipe"})
         url_tag = anime.find('a')
+        
 
         if all([title_tag, eps_tag, hari_tag, url_tag]):
             anime_list.append({
@@ -98,16 +103,39 @@ def get_all_ongoing_anime(page=1):
                 "url": url_tag['href']
             })
     return anime_list
+    
+def get_all_complete_anime(page=1):
+    """Mengambil daftar anime ongoing dari halaman tertentu."""
+    url = f"{HOST}/complete-anime/page/{page}/"
+    soup = get_page_soup(url)
+    if not soup:
+        return []
 
-# core/otakudesu.py
+    anime_list = []
+    venz_div = soup.find('div', {'class': 'venz'})
+    
+    if not venz_div:
+        return []
+    
+    for anime in venz_div.find_all("li"):
+        title_tag = anime.find('h2', {"class": "jdlflm"})
+        eps_tag = anime.find('div', {"class": "epz"})
+        hari_tag = anime.find('div', {'class': 'newnime'})
+        rating_tag = anime.find('div', {"class": "epztipe"})
+        url_tag = anime.find('a')
+        
 
-# ... (kode lain tetap sama) ...
-import re # Tambahkan ini di bagian atas
+        if all([title_tag, eps_tag, hari_tag, rating_tag, url_tag]):
+            anime_list.append({
+                "title": title_tag.text,
+                "eps": eps_tag.text,
+                "hari": hari_tag.text.strip(),
+                "rating": rating_tag.text.strip(),
+                "url": url_tag['href']
+            })
+    return anime_list
 
-# ...
-
-# core/otakudesu.py
-
+	
 def get_anime_details(url):
     """Mengambil detail lengkap dari halaman anime."""
     soup = get_page_soup(url)
@@ -174,6 +202,27 @@ def getDownload(url):
 					fileurl = urlname['href']
 					if "desudrive" in fileurl:
 						fileurl = desudrive(fileurl)
+			if not fileurl:
+				fileurl = dlurl.a['href']
+			ret[filetype] = fileurl
+
+	return ret
+
+
+
+def get_acefiles(url):
+	data = get_page_soup(url)
+	ret = {}
+
+	acefiles = data.find('div', {'class': 'download'})
+	if acefiles:
+		for ace in acefiles.find_all('li'):
+			link_tag = ace.find_all('a', {'data-wpel-link': 'external'})
+			filetype = ace.strong.text
+			fileurl = ""
+			for urlname in ace.find_all('a'):
+				if "acefile" in urlname.text.lower():
+					fileurl = urlname['href']
 			if not fileurl:
 				fileurl = dlurl.a['href']
 			ret[filetype] = fileurl
