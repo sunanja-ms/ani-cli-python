@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 from rich.console import Console
-from .database import get_settings
+from database import get_settings
 
 
 setting = get_settings()
@@ -186,7 +186,10 @@ def getDownload(url):
 			filetype = dlurl.strong.text
 			fileurl = ""
 			for urlname in dlurl.find_all("a"):  # Ganti findAll dengan find_all
-				if "kfiles" in urlname.text.lower():
+
+				if "kraken" in urlname.text.lower():
+					fileurl = urlname['href']
+				elif "kfiles" in urlname.text.lower():
 					fileurl = urlname['href']
 					if "desudrive" in fileurl:
 						fileurl = desudrive(fileurl)
@@ -221,10 +224,10 @@ def get_acefiles(url):
 			filetype = ace.strong.text
 			fileurl = ""
 			for urlname in ace.find_all('a'):
-				if "acefile" in urlname.text.lower():
+				if "kfiles" in urlname.text.lower():
 					fileurl = urlname['href']
 			if not fileurl:
-				fileurl = dlurl.a['href']
+				fileurl = ace.a['href']
 			ret[filetype] = fileurl
 
 	return ret
