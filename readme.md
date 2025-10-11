@@ -41,19 +41,30 @@ ani-cli-python is a lightweight command-line interface (CLI) tool built in Pytho
    - Ensure pip is installed: Follow the [pip installation guide](https://pip.pypa.io/en/stable/installation/).
 
 2. **Install Requirements**:
-   - pip install typer rich questionary beautifulsoup4 requests
+   ```
+    pip install typer rich questionary beautifulsoup4 requests
+   ```
    
 
-3. **Install MPV for Android** (if using Termux):
+4. **Install MPV for Android** (if using Termux):
 - Download from [Google Play Store](https://play.google.com/store/apps/details?id=is.xyz.mpv).
 
-**Clone the repository and navigate to the project directory**:
-   - git clone https://github.com/yourusername/ani-cli-python.git cd ani-cli-python
-
+5. **Clone the repository and navigate to
+ the project directory**:
+   ```
+    git clone https://github.com/sunanja-ms/ani-cli-python.git cd ani-cli-python
+   ```
 
 
 ## Usage
-   - Run the script with: python cli.py
+   - Run the script with:
+    ```
+     python cli.py
+    ```
+   - or
+     ```
+     python3 cli.py
+     ```
    - Follow the interactive prompts to search, browse, and stream anime. Use settings to customize quality or host.
 
    - Example commands (via CLI menu):
@@ -85,7 +96,7 @@ This project is free to use, modify, and distribute. Anyone can take the code an
 
 ## Reporting Issues
 
-The best way to report issues is by creating a new issue on the [GitHub repository](https://github.com/yourusername/ani-cli-python/issues). Provide details like error logs, environment (e.g., Termux version), and steps to reproduce.
+The best way to report issues is by creating a new issue on the [GitHub repository](https://github.com/sunanja-ms/ani-cli-python/issues). Provide details like error logs, environment (e.g., Termux version), and steps to reproduce.
 
 ---
 
