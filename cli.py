@@ -437,6 +437,7 @@ def handle_settings():
         "Video Quality",
         "Stream Links", 
         "Change Url Main",
+        "Os mode options",
         "Kembali"
     ]
     
@@ -466,7 +467,7 @@ def handle_settings():
             wait_for_enter()
         elif choice == 3:
             console.print(Panel("Change Url Main"))
-            console.print(Panel("Domain only"))
+            console.print(Panel(f"Domain only: '{settings.get('host_url')}'"))
             choice_url = Prompt.ask("[green]Masukan Url Main[/green]")
             if choice_url:
                 console.print(f"[green]Url akan diubah menjadi '{choice_url}'[/green]")
@@ -476,6 +477,19 @@ def handle_settings():
                 console.print("[red]Tidak ada yang diinput. Host url default tetap digunakan.[/red]")
             wait_for_enter()
         elif choice == 4:
+            list_mode = ["andorid", "linux", "win"]
+            console.print(Panel(f"Quality default saat ini: '{settings.get('options_mode', 'Belum diatur')}'"))
+            
+            mode_idx = display_list_with_arrows(list_mode, "Available mode")
+            if mode_idx >= 0:
+                mode = list_mode[mode_idx]
+                set_setting("options_mode", mode)
+                console.print(f"[green]Quality default berhasil diubah menjadi '{mode}'[/green]")
+            else:
+                console.print("[yellow]Tidak ada perubahan pada quality default.[/yellow]")
+            
+            wait_for_enter()
+        elif choice == 5:
             break
 
 @app.command(name="start")

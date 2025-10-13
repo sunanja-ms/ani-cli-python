@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 from rich.console import Console
-from database import get_settings
+from .database import get_settings
 
 
 setting = get_settings()
